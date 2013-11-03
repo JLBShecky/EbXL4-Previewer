@@ -6,10 +6,10 @@ import java.util.Random;
 
 public class IterativeLandLayerGenerator extends BaseLandLayerGenerator {
   
-  private int octaves = 8;
+  private int octaves = 9;
   private double persistance = 0.76D;
-  private double frequency = 2.125D;
-  private double detail = 5120D;
+  private double frequency = 2.025D;
+  private double detail = 20480D;
   
   private double balance;
   private double [] offsetValues;

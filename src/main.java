@@ -14,19 +14,29 @@ public class main extends JFrame implements KeyListener {
   
   IterativeLandLayerGenerator layer;
   int size = 200;
+  int offX = 0;
+  int offZ = 0;
+  int myWidth;
+  int myHeight;
+  JPanel renderArea;
+  
+  Random rnd = new Random(1234557);
+  
   main frameInstance;
 
   public main() {
     super("My Frame");
     this.addKeyListener(this);
+
     frameInstance = this;
     
-    layer = new IterativeLandLayerGenerator(new Random());
+    layer = new IterativeLandLayerGenerator(rnd);
 
     // you can set the content pane of the frame
     // to your custom class.
 
-    setContentPane(new DrawPane());
+    renderArea = new DrawPane();
+    setContentPane(renderArea);
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -37,10 +47,7 @@ public class main extends JFrame implements KeyListener {
 
   // create a component that you can actually draw on.
   class DrawPane extends JPanel implements ComponentListener {
-    
-    int width;
-    int height;
-    
+        
     int offsetX;
     int offsetZ;
     
@@ -48,20 +55,20 @@ public class main extends JFrame implements KeyListener {
       this.addComponentListener(this);
       
       Dimension mySize = this.getSize();
-      frameInstance.setTitle("Preview (" + width + "," + height + ")");
+      frameInstance.setTitle("Preview (" + myWidth + "," + myHeight + ")");
       
-      width = mySize.width;
-      height = mySize.height;
+      myWidth = mySize.width;
+      myHeight = mySize.height;
       
-      offsetX = width / 2;
-      offsetZ = height / 2;
+      offsetX = myWidth / 2;
+      offsetZ = myHeight / 2;
     }
     
     public void paintComponent(Graphics g) {
       // draw on g here e.g.
-      for(int z = 0; z <= height; z++) {
-        for(int x = 0; x <= width; x++) {
-          if(layer.Generate(x - offsetX, z - offsetZ)) {
+      for(int z = 0; z <= myHeight; z++) {
+        for(int x = 0; x <= myWidth; x++) {
+          if(layer.Generate(x - offsetX + offX, z - offsetZ + offZ)) {
             g.setColor(new Color(0,127,0));
           } else {
             g.setColor(new Color(0,0,127));
@@ -90,13 +97,13 @@ public class main extends JFrame implements KeyListener {
       // TODO Auto-generated method stub
       
       Dimension mySize = this.getSize();
-      frameInstance.setTitle("Preview (" + width + "," + height + ")");
+      frameInstance.setTitle("Preview (" + myWidth + "," + myHeight + ")");
 
-      width = mySize.width;
-      height = mySize.height;
+      myWidth = mySize.width;
+      myHeight = mySize.height;
       
-      offsetX = width / 2;
-      offsetZ = height / 2;
+      offsetX = myWidth / 2;
+      offsetZ = myHeight / 2;
       
     }
 
@@ -115,16 +122,24 @@ public class main extends JFrame implements KeyListener {
   public void keyPressed(KeyEvent e) {
     // TODO Auto-generated method stub
     if(e.getKeyChar() == 'r') {
-      layer = new IterativeLandLayerGenerator(new Random());
-      this.repaint();
+      rnd.nextInt();
+      layer = new IterativeLandLayerGenerator(rnd);
+    } else if (e.getKeyCode() == KeyEvent.VK_UP) {
+      offZ += myHeight / 4;
+    } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+      offZ -= myHeight / 4;
+    } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+      offX += myWidth / 4;
+    } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+      offX -= myWidth / 4;
     }
+    this.repaint();
     
   }
 
   @Override
   public void keyReleased(KeyEvent e) {
     // TODO Auto-generated method stub
-    
   }
 
   @Override
